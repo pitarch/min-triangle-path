@@ -1,5 +1,0 @@
-package challenge
-
-class ParserSuite {
-
-}
