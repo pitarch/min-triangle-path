@@ -1,5 +1,8 @@
 package object triangles {
 
+  type Report = String
+  type EncodedTriangle = String
+
   trait Triangle {
 
     def value: Int
@@ -8,11 +11,11 @@ package object triangles {
   }
 
   case class Branch(value: Int, left: Triangle, right: Triangle) extends Triangle {
-    override lazy val weight: Int = value + scala.math.min(left.weight, right.weight)
+    override val weight: Int = value + scala.math.min(left.weight, right.weight)
   }
 
   case class Leaf(value: Int) extends Triangle {
-    override def weight: Int = value
+    override val weight: Int = value
   }
 
   object EmptyTriangle extends Triangle {
