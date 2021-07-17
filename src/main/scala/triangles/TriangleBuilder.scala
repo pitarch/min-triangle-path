@@ -7,7 +7,6 @@ package triangles
 trait TriangleBuilder {
 
   def build(encodedTriangle: String): Either[Throwable, Triangle]
-
 }
 
 /**
@@ -52,4 +51,10 @@ class DefaultTriangleBuilder(implicit parser: Parser) extends TriangleBuilder {
     val result = parents zip pairs map { case (value, (left, right)) => Branch(value, left, right) }
     result
   }
+}
+
+
+object TriangleBuilder {
+
+  def default(implicit parser: Parser) = new DefaultTriangleBuilder
 }
