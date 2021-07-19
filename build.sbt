@@ -13,7 +13,9 @@ lazy val app = (project in file("."))
   )
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "3.2.9" % Test
+  "org.typelevel" %% "cats-effect" % "3.1.1" withSources() withJavadoc(),
+  "org.scalatest" %% "scalatest" % "3.2.9" % Test,
+  "org.typelevel" %% "cats-effect-testing-scalatest" % "1.1.0" % Test,
 )
 
 

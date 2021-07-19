@@ -1,21 +1,20 @@
 package triangles
 
-object MinTrianglePathApp extends App {
+import cats.Show
+import cats.effect.std.{Console => Con}
+import cats.effect.{ExitCode, IO, IOApp}
 
-  val encodedTriangle: EncodedTriangle = Iterator.continually(Console.in.readLine()).takeWhile(_ != null).mkString("\n")
-  program(encodedTriangle) foreach println
+object MinTrianglePathApp extends IOApp {
 
-  def program(encodedTriangle: EncodedTriangle): Either[Throwable, Report] = {
-    implicit val parser: Parser = Parser.default
-    val builder = TriangleBuilder.default
-    val pathResolver = DefaultTrianglePathResolver.forMinimalPath
+  implicit val _miniConsole: MiniConsole[IO] = new MiniConsole[IO] {
+    override def println[A](a: A)(implicit S: Show[A]): IO[Unit] = Con[IO].println(a)
 
-    val mayBeTriangle = builder.build(encodedTriangle)
-    mayBeTriangle
-      .map(pathResolver.resolve)
-      .map { path =>
-        val report = path.map(_.toString).mkString(" + ")
-        s"Minimal path is: $report = ${path.sum}"
-      }
+    override def errorln[A](a: A)(implicit S: Show[A]): IO[Unit] = Con[IO].errorln(a)
+  }
+
+  override def run(args: List[String]): IO[ExitCode] = {
+
+    val encodedTriangle = IO.delay(Iterator.continually(Console.in.readLine()).takeWhile(_ != null).mkString("\n"))
+    ProgramF.program[IO](encodedTriangle)
   }
 }

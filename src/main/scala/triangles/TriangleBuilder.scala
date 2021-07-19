@@ -16,7 +16,7 @@ trait TriangleBuilder {
  *
  * @param parser parser
  */
-class DefaultTriangleBuilder(implicit parser: Parser) extends TriangleBuilder {
+class DefaultTriangleBuilder(parser: Parser) extends TriangleBuilder {
 
   /**
    * build an encoded triangle into its tree-like representation
@@ -56,5 +56,5 @@ class DefaultTriangleBuilder(implicit parser: Parser) extends TriangleBuilder {
 
 object TriangleBuilder {
 
-  def default(implicit parser: Parser) = new DefaultTriangleBuilder
+  def default = new DefaultTriangleBuilder(Parser.default)
 }
