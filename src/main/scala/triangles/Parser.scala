@@ -26,3 +26,4 @@ object Parser {
     .map(_.split("\\s+").map(_.toInt).toIndexedSeq))
     .toEither
 }
+

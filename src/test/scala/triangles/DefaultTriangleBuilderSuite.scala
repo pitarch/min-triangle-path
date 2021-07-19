@@ -6,8 +6,7 @@ import org.scalatest.matchers.should.Matchers
 
 class DefaultTriangleBuilderSuite extends AnyFunSuite with Matchers with Inside {
 
-  implicit val _parser: Parser = Parser.default
-  val builder: DefaultTriangleBuilder = new DefaultTriangleBuilder
+  val builder: DefaultTriangleBuilder = new DefaultTriangleBuilder(Parser.default)
 
   test("Empty encoded tree") {
     val content = ""

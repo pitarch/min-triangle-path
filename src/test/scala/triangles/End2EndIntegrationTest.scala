@@ -1,19 +1,38 @@
 package triangles
 
+import cats.Show
+import cats.effect.testing.scalatest.AsyncIOSpec
+import cats.effect.{ExitCode, IO}
 import org.scalatest.Inside
-import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.funsuite.AsyncFunSuite
 import org.scalatest.matchers.should.Matchers
 import triangles.End2EndIntegrationTest.encodedTriangle
-import triangles.MinTrianglePathApp.program
 
-class End2EndIntegrationTest extends AnyFunSuite with Matchers with Inside {
+class End2EndIntegrationTest extends AsyncFunSuite with AsyncIOSpec with Matchers with Inside {
 
   test("End-to-End Integration Test") {
 
+    implicit val miniConsole: TestMiniConsoleIO = new TestMiniConsoleIO
     val expected = "Minimal path is: " + Iterator.continually(1).take(50).mkString(" + ").appendedAll(" = 50")
-    val maybeResult = program(encodedTriangle)
-    inside(maybeResult) { case Right(report) =>
-      report shouldBe expected
+    ProgramF.program[IO](IO.delay(encodedTriangle)).asserting { exitCode =>
+      exitCode shouldBe ExitCode.Success
+      miniConsole.prints should contain theSameElementsInOrderAs List(expected)
+    }
+  }
+
+
+  class TestMiniConsoleIO extends MiniConsole[IO] {
+    var prints = List.empty[String]
+    var errors = List.empty[String]
+
+    override def println[A](a: A)(implicit S: Show[A]): IO[Unit] = {
+      prints = prints.appended(S.show(a))
+      IO.unit
+    }
+
+    override def errorln[A](a: A)(implicit S: Show[A]): IO[Unit] = {
+      errors = errors.appended(S.show(a))
+      IO.unit
     }
   }
 }

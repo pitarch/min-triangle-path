@@ -1,3 +1,5 @@
+import cats.Show
+
 package object triangles {
 
   type Report = String
@@ -22,5 +24,11 @@ package object triangles {
     override def value: Int = 0
 
     override def weight: Int = 0
+  }
+
+
+  trait MiniConsole[F[_]] {
+    def println[A](a: A)(implicit S: Show[A] = Show.fromToString[A]): F[Unit]
+    def errorln[A](a: A)(implicit S: Show[A] = Show.fromToString[A]): F[Unit]
   }
 }
